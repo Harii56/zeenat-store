@@ -1,0 +1,63 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="page-heading">
+    <span class="eyebrow">My Account</span>
+    <h1>Hello, <%= currentUser.name %></h1>
+    <p><%= currentUser.email %></p>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <h3>Account Details</h3>
+      <div class="profile-row">
+        <span>Full Name</span>
+        <strong><%= currentUser.name %></strong>
+      </div>
+      <div class="profile-row">
+        <span>Email</span>
+        <strong><%= currentUser.email %></strong>
+      </div>
+      <a href="/logout" class="btn btn-outline btn-block" style="margin-top:20px;">Logout</a>
+    </div>
+
+    <div class="profile-orders">
+      <h3>Order History</h3>
+
+      <% if (orders.length === 0) { %>
+        <div class="empty-state" style="padding:60px 0;">
+          <h2 style="font-size:22px;">No orders yet</h2>
+          <p>Your placed orders will show up here.</p>
+          <a href="/shop" class="btn btn-primary">Start Shopping</a>
+        </div>
+      <% } else { %>
+        <% orders.forEach(function(order) { %>
+          <div class="order-card">
+            <div class="order-card-head">
+              <div>
+                <span class="order-card-id">Order #<%= order.id %></span>
+                <span class="order-card-date"><%= new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+              </div>
+              <span class="order-card-total"><%= formatPrice(order.total, 'PKR') %></span>
+            </div>
+            <div class="order-card-items">
+              <% order.items.forEach(function(i) { %>
+                <div class="order-summary-item">
+                  <span><%= i.name %> × <%= i.qty %> (<%= i.size %>)</span>
+                  <span><%= formatPrice(i.subtotal, i.currency) %></span>
+                </div>
+              <% }) %>
+            </div>
+            <div class="order-card-foot">
+              <span>Payment: <%= order.paymentMethod %></span>
+              <span>Delivering to: <%= order.shippingInfo.city %></span>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="page-heading">
+    <span class="eyebrow">Your Bag</span>
+    <h1>Shopping Cart</h1>
+  </div>
+
+  <% if (items.length === 0) { %>
+    <div class="empty-state">
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything yet.</p>
+      <a href="/shop" class="btn btn-primary">Continue Shopping</a>
+    </div>
+  <% } else { %>
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Size</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function(i) { %>
+          <tr>
+            <td>
+              <div class="cart-item-info">
+                <img src="<%= i.product.image %>" alt="<%= i.product.name %>" />
+                <div>
+                  <h4><%= i.product.name %></h4>
+                  <span><%= formatPrice(i.product.price, i.product.currency) %> each</span>
+                </div>
+              </div>
+            </td>
+            <td><%= i.size %></td>
+            <td>
+              <form action="/cart/update" method="POST" style="display:flex; gap:8px; align-items:center;">
+                <input type="hidden" name="productId" value="<%= i.product.id %>" />
+                <input class="cart-qty-input" type="number" name="qty" value="<%= i.qty %>" min="1" />
+                <button class="btn btn-outline btn-sm" type="submit">Update</button>
+              </form>
+            </td>
+            <td><%= formatPrice(i.subtotal, i.product.currency) %></td>
+            <td>
+              <form action="/cart/remove" method="POST">
+                <input type="hidden" name="productId" value="<%= i.product.id %>" />
+                <button class="remove-link" type="submit">Remove</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span><%= formatPrice(total, 'PKR') %></span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span><%= total > 5000 ? "Free" : formatPrice(250, 'PKR') %></span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span><%= formatPrice(total > 5000 ? total : total + 250, 'PKR') %></span>
+      </div>
+      <a href="/checkout" class="btn btn-primary btn-block" style="margin-top:20px;">Proceed to Checkout</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

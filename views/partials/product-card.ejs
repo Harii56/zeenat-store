@@ -1,0 +1,22 @@
+<a href="/shop/product/<%= p.id %>" class="product-card">
+  <div class="product-thumb">
+    <img class="thumb-primary" src="<%= p.image %>" alt="<%= p.name %>" loading="lazy" />
+    <% if (p.images && p.images[1]) { %>
+      <img class="thumb-secondary" src="<%= p.images[1] %>" alt="<%= p.name %>" loading="lazy" />
+    <% } %>
+    <% if (p.affiliateLink) { %>
+      <span class="partner-badge">Partner</span>
+    <% } %>
+  </div>
+  <div class="product-info">
+    <div class="product-cat"><%= p.gender %> · <%= p.category %></div>
+    <div class="product-name"><%= p.name %></div>
+    <% if (p.rating) { %>
+      <div class="product-rating">
+        <span class="stars" style="--rating: <%= p.rating %>;" aria-hidden="true">★★★★★</span>
+        <span class="rating-count"><%= p.rating %> (<%= p.reviewCount %>)</span>
+      </div>
+    <% } %>
+    <div class="product-price"><%= formatPrice(p.price, p.currency) %></div>
+  </div>
+</a>

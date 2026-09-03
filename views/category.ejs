@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="page-heading">
+    <span class="eyebrow">Shop</span>
+    <h1>
+      <% if (search) { %>
+        Results for "<%= search %>"
+      <% } else { %>
+        <%= gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : "All Products" %><%= category ? " · " + category : "" %>
+      <% } %>
+    </h1>
+    <p><%= items.length %> item<%= items.length === 1 ? "" : "s" %> found</p>
+  </div>
+
+  <div class="filters-bar">
+    <div class="filter-tabs">
+      <a class="filter-pill <%= !gender ? 'active' : '' %>" href="/shop<%= category ? '?category='+category : '' %>">All</a>
+      <% genders.forEach(function(g) { %>
+        <a class="filter-pill <%= gender === g ? 'active' : '' %>" href="/shop?gender=<%= g %><%= category ? '&category='+category : '' %>">
+          <%= g %>
+        </a>
+      <% }) %>
+    </div>
+
+    <form class="category-select-wrap" action="/shop" method="GET">
+      <% if (gender) { %><input type="hidden" name="gender" value="<%= gender %>" /><% } %>
+      <select name="category" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        <% (gender ? categoriesForGender(gender) : categories).forEach(function(c) { %>
+          <option value="<%= c %>" <%= category === c ? "selected" : "" %>><%= c.charAt(0).toUpperCase() + c.slice(1) %></option>
+        <% }) %>
+      </select>
+    </form>
+  </div>
+
+  <% if (items.length === 0) { %>
+    <div class="empty-state">
+      <h2>No products found</h2>
+      <p>Try a different category or search term.</p>
+      <a href="/shop" class="btn btn-primary">Back to Shop</a>
+    </div>
+  <% } else { %>
+    <div class="product-grid">
+      <% items.forEach(function(p) { %>
+        <%- include('partials/product-card', { p }) %>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

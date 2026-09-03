@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <meta name="p:domain_verify" content="e2ed2915f44bd6859c634d5e2f84f8d7"/>
+  <meta name="description" content="<%= typeof ogDescription !== 'undefined' ? ogDescription : 'Zeenat — a curated boutique for women, men & kids. Dresses, jewelry, bags, glasses, jackets, pants & shirts, styled with an eye for detail.' %>" />
+
+  <!-- Open Graph (Facebook, WhatsApp, Pinterest) -->
+  <meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'website' %>" />
+  <meta property="og:title" content="<%= typeof ogTitle !== 'undefined' ? ogTitle : title %>" />
+  <meta property="og:description" content="<%= typeof ogDescription !== 'undefined' ? ogDescription : 'Discover clothing, jewelry, bags and accessories for women, men and kids at Zeenat.' %>" />
+  <meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://picsum.photos/seed/hero-fashion/1200/630' %>" />
+  <% if (typeof ogPrice !== 'undefined') { %>
+  <meta property="product:price:amount" content="<%= ogPrice %>" />
+  <meta property="product:price:currency" content="PKR" />
+  <% } %>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= typeof ogTitle !== 'undefined' ? ogTitle : title %>" />
+  <meta name="twitter:description" content="<%= typeof ogDescription !== 'undefined' ? ogDescription : 'Discover clothing, jewelry, bags and accessories for women, men and kids at Zeenat.' %>" />
+  <meta name="twitter:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://picsum.photos/seed/hero-fashion/1200/630' %>" />
+
+  <!-- Pinterest verification-friendly rich pin data -->
+  <meta name="pinterest-rich-pin" content="true" />
+
+  <!-- Performance: preconnect to external origins used on every page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://picsum.photos" />
+
+  <!-- Fonts loaded non-blocking: media="print" trick swaps to "all" once loaded -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" /></noscript>
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="bg-animation" aria-hidden="true">
+    <span class="bg-shape shape-1"></span>
+    <span class="bg-shape shape-2"></span>
+    <span class="bg-shape shape-3"></span>
+    <div class="orb-3d-wrap">
+      <div class="orb-3d">
+        <div class="orb-ring ring-1"></div>
+        <div class="orb-ring ring-2"></div>
+        <div class="orb-ring ring-3"></div>
+        <div class="orb-core"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="announce">
+    <div class="announce-track">
+      <span>✦ New Season Arrivals Now Live</span>
+      <span>✦ Curated Style for Women, Men &amp; Kids</span>
+      <span>✦ Premium Quality, Timeless Design</span>
+      <span>✦ New Season Arrivals Now Live</span>
+      <span>✦ Curated Style for Women, Men &amp; Kids</span>
+      <span>✦ Premium Quality, Timeless Design</span>
+    </div>
+  </div>

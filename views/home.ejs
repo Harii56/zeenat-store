@@ -1,0 +1,128 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="eyebrow">New Season Arrivals</span>
+      <h1>Style, Curated<br/>For Everyone.</h1>
+      <p>Discover clothing, accessories, jewelry and more for women, men and kids — handpicked pieces with a distinct point of view.</p>
+      <a href="/shop" class="btn btn-primary">Shop The Collection</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Women: image left, text right -->
+  <section class="gender-banner">
+    <div class="gender-banner-image">
+      <img src="/images/banner-women-portrait.jpg" alt="Women's collection" class="banner-img-primary" loading="eager" />
+      <img src="/images/banner-women-wardrobe.jpg" alt="Zeenat women's wardrobe" class="banner-img-secondary" loading="lazy" />
+    </div>
+    <div class="gender-banner-text">
+      <span class="eyebrow">Shop</span>
+      <h2>Women</h2>
+      <p>Dresses, jewelry, bags and more — pieces that carry an unmistakable sense of style, for every occasion.</p>
+      <a href="/shop?gender=women" class="btn btn-primary">Shop Women</a>
+      <div class="banner-features">
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>Premium Collection</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.4 14.5L16 10 4 22"/><path d="M14 6l6 6"/><path d="M4 4l16 16"/></svg>Latest Trends</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 9l10-7 10 7-10 7z"/><path d="M6 12v6l6 4 6-4v-6"/></svg>Luxury You Deserve</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Men: text left, image right (mirrored) -->
+  <section class="gender-banner reverse">
+    <div class="gender-banner-image">
+      <img src="/images/banner-men-portrait.jpg" alt="Men's collection" class="banner-img-primary" loading="lazy" />
+      <img src="/images/banner-men-wardrobe.jpg" alt="Zeenat men's wardrobe" class="banner-img-secondary" loading="lazy" />
+    </div>
+    <div class="gender-banner-text">
+      <span class="eyebrow">Shop</span>
+      <h2>Men</h2>
+      <p>Shirts, jackets, bands and accessories built for a sharp, everyday wardrobe.</p>
+      <a href="/shop?gender=men" class="btn btn-primary">Shop Men</a>
+      <div class="banner-features">
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l3 5h5l-4 4 2 6-6-4-6 4 2-6-4-4h5z"/></svg>Premium Quality</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>Built To Last</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Timeless Style</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kids: image left, text right (like Women) -->
+  <section class="gender-banner">
+    <div class="gender-banner-image">
+      <img src="/images/banner-kids-portrait.jpg" alt="Kids' collection" class="banner-img-primary" loading="lazy" />
+      <img src="/images/banner-kids-wardrobe.jpg" alt="Zeenat kids' wardrobe" class="banner-img-secondary" loading="lazy" />
+    </div>
+    <div class="gender-banner-text">
+      <span class="eyebrow">Shop</span>
+      <h2>Kids</h2>
+      <p>Comfortable, playful pieces made for everyday adventures.</p>
+      <a href="/shop?gender=kids" class="btn btn-primary">Shop Kids</a>
+      <div class="banner-features">
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-8-4.5-8-11a4 4 0 0 1 8-1.5A4 4 0 0 1 20 10c0 6.5-8 11-8 11z"/></svg>Safe &amp; Comfortable</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l3 5h5l-4 4 2 6-6-4-6 4 2-6-4-4h5z"/></svg>Premium Fabrics</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 21h6"/><path d="M12 17v4"/><path d="M6 3h12l-1 9a5 5 0 0 1-10 0z"/></svg>Trusted Choice</span>
+      </div>
+    </div>
+  </section>
+
+  <% if (featuredWomen.length > 0) { %>
+    <div class="section-head">
+      <h2>Women's Edit</h2>
+      <a href="/shop?gender=women">View All &rarr;</a>
+    </div>
+    <div class="product-grid">
+      <% featuredWomen.forEach(function(p) { %>
+        <%- include('partials/product-card', { p }) %>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (featuredMen.length > 0) { %>
+    <div class="section-head">
+      <h2>Men's Edit</h2>
+      <a href="/shop?gender=men">View All &rarr;</a>
+    </div>
+    <div class="product-grid">
+      <% featuredMen.forEach(function(p) { %>
+        <%- include('partials/product-card', { p }) %>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (featuredKids.length > 0) { %>
+    <div class="section-head">
+      <h2>Kids' Edit</h2>
+      <a href="/shop?gender=kids">View All &rarr;</a>
+    </div>
+    <div class="product-grid">
+      <% featuredKids.forEach(function(p) { %>
+        <%- include('partials/product-card', { p }) %>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (featuredWomen.length === 0 && featuredMen.length === 0 && featuredKids.length === 0) { %>
+    <div class="empty-state" style="padding: 60px 0;">
+      <h2>New Arrivals Coming Soon</h2>
+      <p>We're adding fresh pieces every day — check back shortly.</p>
+    </div>
+  <% } %>
+</div>
+
+<section class="newsletter">
+  <div class="container newsletter-inner">
+    <h2>Stay Updated</h2>
+    <p>Subscribe to receive private invitations to new collections &amp; exclusive offers.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed ✓'; this.querySelector('input').value='';">
+      <input type="email" placeholder="Enter your email address..." required />
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

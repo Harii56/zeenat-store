@@ -1,0 +1,209 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="page-heading">
+    <span class="eyebrow">Almost There</span>
+    <h1>Checkout</h1>
+  </div>
+
+  <form action="/checkout" method="POST">
+    <div class="checkout-grid">
+      <div>
+        <div class="checkout-section">
+          <h3>Shipping Details</h3>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="fullName" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" name="city" required />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="text" name="phone" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Delivery Address</label>
+            <textarea name="address" rows="3" required></textarea>
+          </div>
+        </div>
+
+        <div class="checkout-section">
+          <h3>Payment Method</h3>
+
+          <div class="payment-methods-row">
+            <label class="payment-option" id="codOption">
+              <input type="radio" name="paymentMethod" value="cod" checked onchange="togglePayment('cod')" />
+              <span class="payment-icon">&#128230;</span>
+              <div>
+                <strong>Cash on Delivery</strong>
+                <span>Pay when your order arrives</span>
+              </div>
+            </label>
+            <label class="payment-option" id="cardOption">
+              <input type="radio" name="paymentMethod" value="card" onchange="togglePayment('card')" />
+              <span class="payment-icon">&#128179;</span>
+              <div>
+                <strong>Credit / Debit Card</strong>
+                <span>Visa, Mastercard &amp; more</span>
+              </div>
+            </label>
+          </div>
+
+          <div id="cardFields" class="card-fields">
+            <!-- Live 3D card preview -->
+            <div class="card-preview-wrap">
+              <div class="card-preview" id="cardPreview">
+                <div class="card-face card-front">
+                  <div class="card-top-row">
+                    <span class="card-chip"></span>
+                    <span class="card-network" id="cardNetwork">CARD</span>
+                  </div>
+                  <div class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</div>
+                  <div class="card-bottom-row">
+                    <div>
+                      <span class="card-label">Card Holder</span>
+                      <div class="card-value" id="cardNameDisplay">FULL NAME</div>
+                    </div>
+                    <div>
+                      <span class="card-label">Expires</span>
+                      <div class="card-value" id="cardExpiryDisplay">MM/YY</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-face card-back">
+                  <div class="card-stripe"></div>
+                  <div class="card-cvv-row">
+                    <span class="card-label">CVV</span>
+                    <div class="card-cvv-box" id="cardCvvDisplay">•••</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Card Number</label>
+              <input type="text" id="cardNumberInput" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label>Card Holder Name</label>
+              <input type="text" id="cardNameInput" name="cardHolderName" placeholder="As shown on card" autocomplete="off" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry</label>
+                <input type="text" id="cardExpiryInput" name="cardExpiry" placeholder="MM/YY" maxlength="5" autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cardCvvInput" name="cardCvv" placeholder="123" maxlength="4" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="secure-note">
+              <span class="lock-icon">&#128274;</span>
+              Your payment information is encrypted and processed securely.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-summary-box">
+        <h3 style="font-size:15px; letter-spacing:1.5px; text-transform:uppercase; color:var(--color-gold); margin-bottom:22px;">Order Summary</h3>
+        <% items.forEach(function(i) { %>
+          <div class="order-summary-item">
+            <span><strong><%= i.product.name %></strong> × <%= i.qty %> (<%= i.size %>)</span>
+            <span><%= formatPrice(i.subtotal, i.product.currency) %></span>
+          </div>
+        <% }) %>
+        <div class="summary-row" style="margin-top:20px;">
+          <span>Subtotal</span>
+          <span><%= formatPrice(subtotal, 'PKR') %></span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span><%= shipping === 0 ? "Free" : formatPrice(shipping, 'PKR') %></span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span><%= formatPrice(total, 'PKR') %></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px;">Place Order</button>
+        <div class="trust-badges">
+          <span>&#128274; Secure Checkout</span>
+          <span>&#10003; Verified Store</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  function togglePayment(method) {
+    document.getElementById('cardFields').classList.toggle('active', method === 'card');
+    document.getElementById('codOption').classList.toggle('selected', method === 'cod');
+    document.getElementById('cardOption').classList.toggle('selected', method === 'card');
+  }
+  togglePayment('cod');
+
+  const numberInput = document.getElementById('cardNumberInput');
+  const nameInput = document.getElementById('cardNameInput');
+  const expiryInput = document.getElementById('cardExpiryInput');
+  const cvvInput = document.getElementById('cardCvvInput');
+  const cardPreview = document.getElementById('cardPreview');
+
+  numberInput.addEventListener('input', function (e) {
+    let digits = e.target.value.replace(/\D/g, '').slice(0, 16);
+    e.target.value = digits.replace(/(.{4})/g, '$1 ').trim();
+
+    const display = digits.padEnd(16, '•').replace(/(.{4})/g, '$1 ').trim();
+    document.getElementById('cardNumberDisplay').textContent = display;
+
+    const networkEl = document.getElementById('cardNetwork');
+    if (digits.startsWith('4')) networkEl.textContent = 'VISA';
+    else if (/^5[1-5]/.test(digits)) networkEl.textContent = 'MASTERCARD';
+    else if (/^3[47]/.test(digits)) networkEl.textContent = 'AMEX';
+    else networkEl.textContent = 'CARD';
+  });
+
+  nameInput.addEventListener('input', function (e) {
+    document.getElementById('cardNameDisplay').textContent = e.target.value.toUpperCase() || 'FULL NAME';
+  });
+
+  expiryInput.addEventListener('input', function (e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+    if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+    e.target.value = v;
+    document.getElementById('cardExpiryDisplay').textContent = v || 'MM/YY';
+  });
+
+  cvvInput.addEventListener('input', function (e) {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+    document.getElementById('cardCvvDisplay').textContent = e.target.value.padEnd(3, '•');
+  });
+
+  cvvInput.addEventListener('focus', function () { cardPreview.classList.add('flipped'); });
+  cvvInput.addEventListener('blur', function () { cardPreview.classList.remove('flipped'); });
+
+  // subtle 3D tilt on mouse move over the card
+  const wrap = document.querySelector('.card-preview-wrap');
+  if (wrap) {
+    wrap.addEventListener('mousemove', function (e) {
+      const rect = wrap.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      cardPreview.style.setProperty('--tiltX', (-y * 10) + 'deg');
+      cardPreview.style.setProperty('--tiltY', (x * 10) + 'deg');
+    });
+    wrap.addEventListener('mouseleave', function () {
+      cardPreview.style.setProperty('--tiltX', '0deg');
+      cardPreview.style.setProperty('--tiltY', '0deg');
+    });
+  }
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,143 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="page-heading" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;">
+    <div>
+      <span class="eyebrow">Admin Panel</span>
+      <h1>Add a Product</h1>
+      <p>Fill this form to add a new product — it appears on the site instantly, no code or deploy needed.</p>
+    </div>
+    <a href="/admin/logout" class="btn btn-outline btn-sm">Logout</a>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <div class="admin-form-card">
+    <form action="/admin/products/add" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" name="name" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price *</label>
+          <input type="number" name="price" required min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Currency *</label>
+          <select name="currency" required>
+            <option value="PKR">PKR (Rs.) — Pakistan</option>
+            <option value="USD">USD ($) — USA</option>
+            <option value="GBP">GBP (£) — UK</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Gender *</label>
+          <select name="gender" required>
+            <option value="">Select</option>
+            <% genders.forEach(function(g) { %>
+              <option value="<%= g %>"><%= g.charAt(0).toUpperCase() + g.slice(1) %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select name="category" required>
+            <option value="">Select</option>
+            <% categories.forEach(function(c) { %>
+              <option value="<%= c %>"><%= c.charAt(0).toUpperCase() + c.slice(1) %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Image URLs * (one per line — first one is the main photo)</label>
+        <textarea name="images" rows="4" placeholder="https://... (main image)&#10;https://... (2nd photo/color)&#10;https://... (3rd photo/color)" required></textarea>
+        <p style="font-size:11px; color:var(--color-text-muted); margin-top:6px;">Tip: right-click the large/zoomed photo on the product page (not a small thumbnail) and choose "Copy image address" for a sharp, high-resolution image.</p>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3" placeholder="Short product description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Colors Available (comma separated, optional)</label>
+        <input type="text" name="colors" placeholder="Red, Black, Navy, Green — or leave blank" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sizes (comma separated)</label>
+          <input type="text" name="sizes" placeholder="S, M, L, XL — or leave blank" />
+        </div>
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" name="stock" placeholder="10" min="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Affiliate Link (optional)</label>
+        <input type="url" name="affiliateLink" placeholder="https://s.click.aliexpress.com/... — leave blank for a normal product" />
+      </div>
+
+      <div class="form-group">
+        <label>Sale/Deal Ends On (optional)</label>
+        <input type="date" name="saleEndDate" />
+        <p style="font-size:11px; color:var(--color-text-muted); margin-top:6px;">If this product is a time-limited AliExpress deal, set the date it ends — it will automatically stop showing on the site after that date so you don't have to remember to remove it.</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Add Product</button>
+    </form>
+  </div>
+
+  <div class="section-head">
+    <h2>Your Added Products (<%= adminProducts.length %>)</h2>
+  </div>
+
+  <% if (adminProducts.length === 0) { %>
+    <p style="color:var(--color-text-muted); margin-bottom:60px;">No products added yet — use the form above.</p>
+  <% } else { %>
+    <div class="admin-product-list">
+      <% adminProducts.forEach(function(p) { %>
+        <% 
+          let expiryBadge = null;
+          if (p.saleEndDate) {
+            const daysLeft = Math.ceil((new Date(p.saleEndDate + "T23:59:59") - Date.now()) / 86400000);
+            if (isExpired(p)) expiryBadge = { text: "Sale Ended — Hidden from site", cls: "badge-expired" };
+            else if (daysLeft <= 3) expiryBadge = { text: "Ends in " + daysLeft + " day" + (daysLeft === 1 ? "" : "s"), cls: "badge-expiring" };
+          }
+        %>
+        <div class="admin-product-row">
+          <img src="<%= p.image %>" alt="<%= p.name %>" />
+          <div class="admin-product-info">
+            <strong><%= p.name %></strong>
+            <span><%= p.gender %> · <%= p.category %> · <%= formatPrice(p.price, p.currency) %></span>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <% if (p.affiliateLink) { %><span class="partner-tag">Affiliate</span><% } %>
+              <% if (expiryBadge) { %><span class="partner-tag <%= expiryBadge.cls %>"><%= expiryBadge.text %></span><% } %>
+            </div>
+          </div>
+          <a href="/shop/product/<%= p.id %>" class="btn btn-outline btn-sm" target="_blank">View</a>
+          <form action="/admin/products/delete" method="POST" onsubmit="return confirm('Delete this product?')">
+            <input type="hidden" name="id" value="<%= p.id %>" />
+            <button type="submit" class="remove-link">Delete</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
